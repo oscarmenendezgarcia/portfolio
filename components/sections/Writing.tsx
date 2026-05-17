@@ -1,20 +1,22 @@
-// Server Component — placeholder stub. Content populated in the Writing feature task.
+// Server Component — Writing section.
+// Displays a chronological list of published articles from external platforms.
 
 type Article = {
   title: string;
-  date: string; // ISO 8601
-  dateDisplay: string;
-  category: string;
+  date: string; // ISO 8601 (YYYY-MM-DD) — used for sorting and <time dateTime>
+  dateDisplay: string; // Pre-formatted display string ("Mon DD, YYYY")
+  platform: "LinkedIn" | "X" | "Blog";
   excerpt: string;
   href: string;
 };
 
-const PLACEHOLDER_ARTICLES: Article[] = [
+// Articles must be sorted by date descending (newest first).
+const ARTICLES: Article[] = [
   {
     title: "Building a Minimalist Design System with Tailwind v4",
     date: "2026-03-15",
     dateDisplay: "Mar 15, 2026",
-    category: "Design Systems",
+    platform: "Blog",
     excerpt:
       "How I replaced a complex tailwind.config.js with a handful of CSS custom properties and never looked back.",
     href: "#",
@@ -23,7 +25,7 @@ const PLACEHOLDER_ARTICLES: Article[] = [
     title: "TypeScript Satisfies vs As: When to Use Each",
     date: "2026-03-01",
     dateDisplay: "Mar 1, 2026",
-    category: "TypeScript",
+    platform: "LinkedIn",
     excerpt:
       "The satisfies operator quietly became my most-used TypeScript feature. Here's why.",
     href: "#",
@@ -32,7 +34,7 @@ const PLACEHOLDER_ARTICLES: Article[] = [
     title: "Why I Stopped Using JavaScript Scroll Libraries",
     date: "2026-02-10",
     dateDisplay: "Feb 10, 2026",
-    category: "Performance",
+    platform: "X",
     excerpt:
       "Native scroll-behavior: smooth does 95% of what Lenis does, ships zero bytes, and respects prefers-reduced-motion for free.",
     href: "#",
@@ -55,11 +57,12 @@ export default function Writing() {
         </h2>
 
         <div className="flex flex-col gap-8">
-          {PLACEHOLDER_ARTICLES.map((article) => (
+          {ARTICLES.map((article) => (
             <article
-              key={article.title}
-              className="border-b border-border pb-8 last:border-0 hover:bg-surface-elevated -mx-4 px-4 rounded-[var(--radius-md)] transition-colors"
+              key={article.date + article.title}
+              className="border-b border-border pb-8 last:border-0 last:pb-0 hover:bg-surface-elevated -mx-4 px-4 rounded-[var(--radius-md)] transition-colors"
             >
+              {/* Metadata row: date · platform */}
               <div className="flex items-center gap-3 mb-2">
                 <time
                   dateTime={article.date}
@@ -67,11 +70,11 @@ export default function Writing() {
                 >
                   {article.dateDisplay}
                 </time>
-                <span className="text-xs text-border" aria-hidden="true">
+                <span aria-hidden="true" className="text-xs text-border">
                   ·
                 </span>
                 <span className="text-xs text-text-secondary font-mono">
-                  {article.category}
+                  {article.platform}
                 </span>
               </div>
 
@@ -85,6 +88,8 @@ export default function Writing() {
 
               <a
                 href={article.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-sm text-accent hover:text-accent-hover transition-colors"
               >
                 Read more &rarr;
