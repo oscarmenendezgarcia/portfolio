@@ -1,4 +1,4 @@
-// Server Component — placeholder stub. Content populated in the Philosophy feature task.
+// Server Component — no client-side JS required.
 
 const PRINCIPLES = [
   {
