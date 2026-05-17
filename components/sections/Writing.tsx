@@ -1,43 +1,67 @@
-// Server Component — placeholder stub. Content populated in the Writing feature task.
+// Server Component — Writing section.
+// Lists articles and posts published on external platforms (LinkedIn, X, Blog),
+// ordered by date descending. Layout: simple list, no thumbnails.
+
+type Platform = "LinkedIn" | "X" | "Blog";
 
 type Article = {
   title: string;
-  date: string; // ISO 8601
+  /** ISO 8601 date — used for sorting and the <time> datetime attribute. */
+  date: string;
   dateDisplay: string;
-  category: string;
-  excerpt: string;
+  platform: Platform;
   href: string;
 };
 
-const PLACEHOLDER_ARTICLES: Article[] = [
+// Articles ordered newest-first. Add new entries at the top.
+const ARTICLES: Article[] = [
   {
     title: "Building a Minimalist Design System with Tailwind v4",
     date: "2026-03-15",
-    dateDisplay: "Mar 15, 2026",
-    category: "Design Systems",
-    excerpt:
-      "How I replaced a complex tailwind.config.js with a handful of CSS custom properties and never looked back.",
-    href: "#",
+    dateDisplay: "Mar 2026",
+    platform: "Blog",
+    href: "https://oscar.dev/posts/tailwind-v4-design-system",
   },
   {
-    title: "TypeScript Satisfies vs As: When to Use Each",
-    date: "2026-03-01",
-    dateDisplay: "Mar 1, 2026",
-    category: "TypeScript",
-    excerpt:
-      "The satisfies operator quietly became my most-used TypeScript feature. Here's why.",
-    href: "#",
+    title: "TypeScript satisfies vs as: When to Use Each",
+    date: "2026-02-28",
+    dateDisplay: "Feb 2026",
+    platform: "LinkedIn",
+    href: "https://linkedin.com/in/oscarmenendezgarcia/",
   },
   {
     title: "Why I Stopped Using JavaScript Scroll Libraries",
-    date: "2026-02-10",
-    dateDisplay: "Feb 10, 2026",
-    category: "Performance",
-    excerpt:
-      "Native scroll-behavior: smooth does 95% of what Lenis does, ships zero bytes, and respects prefers-reduced-motion for free.",
-    href: "#",
+    date: "2026-01-20",
+    dateDisplay: "Jan 2026",
+    platform: "X",
+    href: "https://x.com/oscarmenendez",
+  },
+  {
+    title: "The Case for Fewer Abstractions in Frontend Code",
+    date: "2025-11-05",
+    dateDisplay: "Nov 2025",
+    platform: "Blog",
+    href: "https://oscar.dev/posts/fewer-abstractions",
+  },
+  {
+    title: "Ship Boring Infrastructure, Build Exciting Products",
+    date: "2025-09-18",
+    dateDisplay: "Sep 2025",
+    platform: "LinkedIn",
+    href: "https://linkedin.com/in/oscarmenendezgarcia/",
   },
 ];
+
+/** Sorted newest-first as a defensive measure (source of truth is the array above). */
+const sortedArticles = [...ARTICLES].sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
+const PLATFORM_LABEL: Record<Platform, string> = {
+  LinkedIn: "LinkedIn",
+  X: "X (Twitter)",
+  Blog: "Blog",
+};
 
 export default function Writing() {
   return (
@@ -54,44 +78,39 @@ export default function Writing() {
           Writing
         </h2>
 
-        <div className="flex flex-col gap-8">
-          {PLACEHOLDER_ARTICLES.map((article) => (
-            <article
-              key={article.title}
-              className="border-b border-border pb-8 last:border-0 hover:bg-surface-elevated -mx-4 px-4 rounded-[var(--radius-md)] transition-colors"
-            >
-              <div className="flex items-center gap-3 mb-2">
+        <ol className="flex flex-col divide-y divide-border" role="list">
+          {sortedArticles.map((article) => (
+            <li key={`${article.date}-${article.title}`} className="py-5 first:pt-0 last:pb-0">
+              <div className="flex items-baseline gap-3 mb-1">
                 <time
                   dateTime={article.date}
-                  className="text-xs text-text-secondary"
+                  className="text-xs font-mono text-text-secondary tabular-nums shrink-0"
                 >
                   {article.dateDisplay}
                 </time>
-                <span className="text-xs text-border" aria-hidden="true">
-                  ·
-                </span>
-                <span className="text-xs text-text-secondary font-mono">
-                  {article.category}
+                <span className="text-xs text-border" aria-hidden="true">·</span>
+                <span className="text-xs font-mono text-text-secondary">
+                  {PLATFORM_LABEL[article.platform]}
                 </span>
               </div>
 
-              <h3 className="text-base font-semibold text-text-primary mb-2 leading-snug">
-                {article.title}
-              </h3>
-
-              <p className="text-sm text-text-secondary leading-relaxed mb-3">
-                {article.excerpt}
-              </p>
-
               <a
                 href={article.href}
-                className="text-sm text-accent hover:text-accent-hover transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-baseline gap-1 text-base font-medium text-text-primary hover:text-accent transition-colors"
               >
-                Read more &rarr;
+                <span>{article.title}</span>
+                <span
+                  className="text-text-secondary group-hover:text-accent transition-colors text-sm"
+                  aria-hidden="true"
+                >
+                  &nbsp;&rarr;
+                </span>
               </a>
-            </article>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );
