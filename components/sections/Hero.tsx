@@ -9,19 +9,33 @@ export default function Hero() {
       className="py-20 lg:py-32"
     >
       <div className="max-w-[900px] mx-auto px-6 lg:px-10">
+        {/* Display name — largest, most prominent element on the page */}
         <h1
           id="hero-heading"
-          className="text-4xl lg:text-6xl font-bold text-text-primary leading-tight tracking-tight mb-6"
+          className="text-4xl lg:text-6xl font-semibold text-text-primary leading-[1.1] tracking-[-0.04em] mb-3"
         >
           {site.name}
         </h1>
 
+        {/* Location — monospace label, subordinate to name, grouped with identity */}
+        <p
+          aria-label={`Based in ${site.location}`}
+          className="font-mono text-xs font-semibold text-text-secondary tracking-widest uppercase mb-6"
+        >
+          {site.location}
+        </p>
+
+        {/* Professional role — secondary hierarchy */}
+        <p className="text-lg lg:text-xl text-text-secondary leading-relaxed mb-4">
+          {site.role}
+        </p>
+
+        {/* Value proposition — tertiary; personal tone, brief narrative */}
         <p className="text-lg lg:text-xl text-text-secondary leading-relaxed max-w-xl mb-10">
-          {site.role}.
-          <br />
           Fascinated by systems, clarity, and delightful user experiences.
         </p>
 
+        {/* Primary CTA — accent gold, underline, keyboard accessible */}
         <a
           href={site.cvPath}
           download
