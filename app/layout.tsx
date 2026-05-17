@@ -73,13 +73,13 @@ export default function RootLayout({
           Skip to content
         </a>
 
-        {/* Fixed navigation header — 80px height; sections use scroll-margin-top to compensate */}
-        <header className="fixed top-0 w-full z-50 h-20 border-b border-border bg-bg/90 backdrop-blur-sm">
+        {/* Fixed navigation header — 64px mobile / 80px desktop; sections compensate via scroll-margin-top */}
+        <header className="fixed top-0 w-full z-50 h-16 md:h-20 border-b border-border bg-bg/90 backdrop-blur-sm">
           <Navbar />
         </header>
 
-        {/* pt-20 offsets the fixed header so content isn't hidden beneath it */}
-        <main id="main" className="flex-1 pt-20">
+        {/* pt-16/pt-20 offsets the fixed header so content isn't hidden beneath it */}
+        <main id="main" className="flex-1 pt-16 md:pt-20">
           {children}
         </main>
       </body>

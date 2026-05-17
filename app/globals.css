@@ -53,10 +53,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Sections with anchor IDs get a scroll-margin so the fixed navbar (80px)
-   doesn't overlap the section heading on anchor navigation. */
+/* Sections with anchor IDs get a scroll-margin so the fixed navbar
+   doesn't overlap the section heading on anchor navigation.
+   Mobile: 64px (h-16) · Desktop (md+): 80px (h-20) */
 section[id] {
-  scroll-margin-top: 80px;
+  scroll-margin-top: 64px;
+}
+
+@media (min-width: 768px) {
+  section[id] {
+    scroll-margin-top: 80px;
+  }
 }
 
 /* ─── Skip-to-content link (accessibility) ──────────────────────────────── */
