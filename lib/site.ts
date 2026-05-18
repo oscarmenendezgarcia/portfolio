@@ -99,6 +99,17 @@ export const projects: ProjectCard[] = [
   {
     id: "01",
     kind: "project",
+    title: "OPTCG Search",
+    description:
+      "Card search engine for the One Piece Card Game. Fast full-text and filter-based lookup across the full card catalogue.",
+    role: "Author & maintainer",
+    href: "https://optcg-search.vercel.app/",
+    status: "launched",
+    stack: ["Next.js", "TypeScript", "Tailwind", "Vercel"],
+  },
+  {
+    id: "02",
+    kind: "project",
     title: "Prism — Local Kanban + Agent Pipeline",
     description:
       "Local-first kanban board with a pluggable agent pipeline (architect → UX → dev → QA). Node.js + SQLite backend, React + Tailwind frontend.",
