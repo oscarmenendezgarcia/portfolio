@@ -1,45 +1,104 @@
-// Server Component — Work section: responsive grid of highlighted projects.
-// Data lives in lib/site.ts; numbering is auto-generated from array index.
+// Server Component — Work section: hybrid grid of personal projects and professional roles.
+// Data lives in lib/site.ts; kicker numbering is auto-generated from combined array index.
 
-import { projects as siteProjects, type ProjectCard } from "@/lib/site";
+import {
+  projects as siteProjects,
+  experience as siteExperience,
+  type ProjectCard,
+  type Role,
+} from "@/lib/site";
+
+// ─── CardView ─────────────────────────────────────────────────────────────────
+// Normalised render contract shared by both project and role cards.
+
+type CardView = {
+  id: string;
+  /** Two-digit numeric label, e.g. "01". */
+  kicker: string;
+  title: string;
+  /** Accent-coloured subtitle: job title or project owner role. */
+  subtitle: string;
+  /** Date range or "Personal project" — rendered in monospace. */
+  meta: string;
+  /** Lead sentence: first responsibility or project description. */
+  body: string;
+  /** Remaining responsibilities rendered as a <ul> (role cards only). */
+  bullets?: string[];
+  stack: string[];
+  statusLabel: string;
+  statusKind: "current" | "past" | "project";
+  /** Defined for project cards; absent for role cards. */
+  href?: string;
+};
+
+// ─── Adapters ─────────────────────────────────────────────────────────────────
+
+function fromProject(p: ProjectCard): Omit<CardView, "kicker"> {
+  return {
+    id: p.id,
+    title: p.title,
+    subtitle: p.role,
+    meta: "Personal project",
+    body: p.description,
+    bullets: undefined,
+    stack: p.stack,
+    statusLabel: "Personal",
+    statusKind: "project",
+    href: p.href,
+  };
+}
+
+function fromRole(r: Role): Omit<CardView, "kicker"> {
+  const [first, ...rest] = r.responsibilities;
+  return {
+    id: r.id,
+    title: r.company,
+    subtitle: r.title,
+    meta: r.dateRange,
+    body: first ?? "",
+    bullets: rest.length > 0 ? rest : undefined,
+    stack: r.stack,
+    statusLabel: r.status === "current" ? "Current" : "Past",
+    statusKind: r.status,
+    href: undefined,
+  };
+}
 
 // ─── Status helpers ───────────────────────────────────────────────────────────
 
-const STATUS_LABEL: Record<ProjectCard["status"], string> = {
-  "in-progress": "In Development",
-  launched: "Launched",
-  archived: "Archived",
-};
-
-/**
- * Returns Tailwind classes for the status badge pill.
- * Colors are arbitrary values because these states don't have named tokens.
- */
-function statusClasses(status: ProjectCard["status"]): string {
-  switch (status) {
-    case "in-progress":
+function statusClasses(kind: CardView["statusKind"]): string {
+  switch (kind) {
+    case "current":
       return "bg-[#1a4d2e] text-[#4ade80]";
-    case "launched":
+    case "past":
       return "bg-[#333333] text-text-primary";
-    case "archived":
-      return "bg-[#4d4d4d] text-text-secondary";
+    case "project":
+      return "bg-[#3a2f1a] text-accent";
   }
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface WorkProps {
-  /** Override the default project list (useful for testing / story variants). */
+  /** Override project list (useful for testing / story variants). */
   projects?: ProjectCard[];
-  /** Cap how many projects appear in the grid. Default: 4. */
-  maxProjects?: number;
+  /** Override experience list (useful for testing / story variants). */
+  experience?: Role[];
+  /** Cap how many cards appear in the grid. Default: 6. */
+  maxItems?: number;
 }
 
 export default function Work({
   projects = siteProjects,
-  maxProjects = 4,
+  experience = siteExperience,
+  maxItems = 6,
 }: WorkProps) {
-  const displayed = projects.slice(0, maxProjects);
+  const items: CardView[] = [
+    ...projects.map(fromProject),
+    ...experience.map(fromRole),
+  ]
+    .slice(0, maxItems)
+    .map((card, i) => ({ ...card, kicker: String(i + 1).padStart(2, "0") }));
 
   return (
     <section
@@ -51,82 +110,92 @@ export default function Work({
         {/* Section heading */}
         <h2
           id="work-heading"
-          className="text-2xl lg:text-4xl font-semibold text-text-primary mb-10"
+          className="text-2xl lg:text-4xl font-semibold text-text-primary mb-2"
         >
           Work
         </h2>
 
+        {/* Sub-heading */}
+        <p className="text-text-secondary text-sm mb-8">
+          Recent projects and roles
+        </p>
+
         {/* Responsive grid: 1 col mobile → 2 cols ≥768px */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          {displayed.map((project, index) => {
-            // Auto-generate "01/", "02/", … from array position
-            const number = String(index + 1).padStart(2, "0");
-            const isExternal = project.href.startsWith("http");
-
-            return (
-              <article
-                key={project.id}
-                className="flex flex-col bg-surface border border-border rounded-[var(--radius-md)] p-4 md:p-5 hover:bg-surface-elevated transition-colors duration-150 ease-out"
+          {items.map((card) => (
+            <article
+              key={card.id}
+              className="flex flex-col bg-surface border border-border rounded-[var(--radius-md)] p-4 md:p-5 hover:bg-surface-elevated transition-colors duration-150 ease-out"
+            >
+              {/* ── Kicker ──────────────────────────────────────────── */}
+              <span
+                aria-hidden="true"
+                className="text-xs font-mono font-bold text-accent mb-3 leading-none"
               >
-                {/* ── Project number badge ────────────────────────────── */}
-                <span
-                  aria-hidden="true"
-                  className="text-xs font-mono font-bold text-accent mb-3 leading-none"
-                >
-                  {number}/
-                </span>
+                {card.kicker}/
+              </span>
 
-                {/* ── Title ───────────────────────────────────────────── */}
-                <h3 className="text-lg font-semibold text-text-primary mb-2 leading-snug">
-                  {project.title}
-                </h3>
+              {/* ── Title ───────────────────────────────────────────── */}
+              <h3 className="text-lg font-semibold text-text-primary mb-1 leading-snug">
+                {card.title}
+              </h3>
 
-                {/* ── Description ─────────────────────────────────────── */}
-                <p className="text-sm text-text-secondary leading-relaxed mb-3 flex-1">
-                  {project.description}
-                </p>
+              {/* ── Subtitle (accent) ─────────────────────────────────── */}
+              <p className="text-[13px] text-accent mb-1">{card.subtitle}</p>
 
-                {/* ── Role ────────────────────────────────────────────── */}
-                <p className="text-[13px] text-accent mb-3">{project.role}</p>
+              {/* ── Meta: dateRange or "Personal project" ─────────────── */}
+              <p className="font-mono text-[11px] text-text-secondary mb-3 tracking-wide">
+                {card.meta}
+              </p>
 
-                {/* ── Tech stack badges ───────────────────────────────── */}
-                <ul
-                  aria-label="Tech stack"
-                  className="flex flex-wrap gap-1.5 mb-4"
-                >
-                  {project.stack.map((tech) => (
-                    <li
-                      key={tech}
-                      className="text-[12px] text-text-secondary border border-border rounded-full px-2 py-0.5 leading-tight"
-                    >
-                      {tech}
-                    </li>
+              {/* ── Body ────────────────────────────────────────────── */}
+              <p className="text-sm text-text-secondary leading-relaxed mb-2 flex-1">
+                {card.body}
+              </p>
+
+              {/* ── Bullet responsibilities (role cards only) ────────── */}
+              {card.bullets && card.bullets.length > 0 && (
+                <ul className="text-xs text-text-secondary list-disc ml-4 mb-3 space-y-0.5">
+                  {card.bullets.map((bullet) => (
+                    <li key={bullet}>{bullet}</li>
                   ))}
                 </ul>
+              )}
 
-                {/* ── Footer: status badge + view link ────────────────── */}
-                <div className="flex items-center justify-between gap-2 mt-auto">
-                  {/* Status pill */}
-                  <span
-                    className={`text-[11px] font-medium rounded-full px-2 py-0.5 leading-tight ${statusClasses(project.status)}`}
+              {/* ── Tech stack badges ───────────────────────────────── */}
+              <ul aria-label="Tech stack" className="flex flex-wrap gap-1.5 mb-4">
+                {card.stack.map((tech) => (
+                  <li
+                    key={tech}
+                    className="text-[12px] text-text-secondary border border-border rounded-full px-2 py-0.5 leading-tight"
                   >
-                    {STATUS_LABEL[project.status]}
-                  </span>
+                    {tech}
+                  </li>
+                ))}
+              </ul>
 
-                  {/* View link */}
+              {/* ── Footer: status pill + optional view link ─────────── */}
+              <div className="flex items-center justify-between gap-2 mt-auto">
+                <span
+                  className={`text-[11px] font-medium rounded-full px-2 py-0.5 leading-tight ${statusClasses(card.statusKind)}`}
+                >
+                  {card.statusLabel}
+                </span>
+
+                {card.href && (
                   <a
-                    href={project.href}
-                    target={isExternal ? "_blank" : undefined}
-                    rel={isExternal ? "noopener noreferrer" : undefined}
-                    aria-label={`View ${project.title}${isExternal ? " (opens in new tab)" : ""}`}
+                    href={card.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`View ${card.title} (opens in new tab)`}
                     className="text-[13px] text-accent hover:text-accent-hover transition-colors duration-150 ease-out"
                   >
                     View &rarr;
                   </a>
-                </div>
-              </article>
-            );
-          })}
+                )}
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

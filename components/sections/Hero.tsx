@@ -26,13 +26,18 @@ export default function Hero() {
         </p>
 
         {/* Professional role — secondary hierarchy */}
-        <p className="text-lg lg:text-xl text-text-secondary leading-relaxed mb-4">
+        <p className="text-lg lg:text-xl text-text-secondary leading-relaxed mb-2">
           {site.role}
         </p>
 
-        {/* Value proposition — tertiary; personal tone, brief narrative */}
+        {/* Tagline — monospace, between role and bio */}
+        <p className="font-mono text-xs uppercase tracking-widest text-text-secondary mb-6">
+          {site.tagline}
+        </p>
+
+        {/* Bio — 2-sentence narrative drawn from CV */}
         <p className="text-lg lg:text-xl text-text-secondary leading-relaxed max-w-xl mb-10">
-          Fascinated by systems, clarity, and delightful user experiences.
+          {site.bio}
         </p>
 
         {/* Primary CTA — accent gold, underline, keyboard accessible */}
