@@ -36,8 +36,9 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio.local",
   /** ≤160 characters — used in <meta name="description"> and OpenGraph */
   description:
-    "Full-stack engineer fascinated by systems, clarity, and delightful user experiences. Building products that matter.",
+    "Full-stack systems, AI products, and interfaces worth using.",
   nav: [
+    { label: "Assistant", href: "#assistant" },
     { label: "Work", href: "#work" },
     { label: "Writing", href: "#writing" },
     { label: "Philosophy", href: "#philosophy" },

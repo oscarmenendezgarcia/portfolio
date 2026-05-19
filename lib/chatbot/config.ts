@@ -2,7 +2,7 @@
 // All magic numbers live here — no hard-coding in handlers or components.
 
 /** Google Gemini model identifier. */
-export const CHATBOT_MODEL_ID = "gemini-2.0-flash-exp" as const;
+export const CHATBOT_MODEL_ID = "gemini-3.1-flash-lite" as const;
 
 /** Maximum characters allowed per message from the user. */
 export const MAX_INPUT_CHARS = 1_000;

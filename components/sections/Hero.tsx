@@ -6,43 +6,31 @@ export default function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="py-20 lg:py-32"
+      className="py-12 lg:py-16"
     >
       <div className="max-w-[900px] mx-auto px-6 lg:px-10">
-        {/* Display name — largest, most prominent element on the page */}
+        {/* Role + location — monospace label, single line */}
+        <p className="font-mono text-xs font-semibold text-text-secondary tracking-widest uppercase mb-3">
+          {site.role} · {site.location}
+        </p>
+
+        {/* Display name */}
         <h1
           id="hero-heading"
-          className="text-4xl lg:text-6xl font-semibold text-text-primary leading-[1.1] tracking-[-0.04em] mb-3"
+          className="text-4xl lg:text-6xl font-bold text-text-primary leading-[1.05] tracking-[-0.05em] mb-5"
         >
           {site.name}
         </h1>
 
-        {/* Location — monospace label, subordinate to name, grouped with identity */}
-        <p
-          aria-label={`Based in ${site.location}`}
-          className="font-mono text-xs font-semibold text-text-secondary tracking-widest uppercase mb-6"
-        >
-          {site.location}
+        {/* Tagline */}
+        <p className="text-lg lg:text-xl text-text-secondary leading-relaxed max-w-xl mb-4">
+          {site.description}
         </p>
 
-        {/* Professional role — secondary hierarchy */}
-        <p className="text-lg lg:text-xl text-text-secondary leading-relaxed mb-4">
-          {site.role}
+        {/* CTA to assistant */}
+        <p className="text-base text-text-secondary leading-relaxed max-w-xl">
+          Ask the assistant anything about my experience, projects, or how I work.
         </p>
-
-        {/* Value proposition — tertiary; personal tone, brief narrative */}
-        <p className="text-lg lg:text-xl text-text-secondary leading-relaxed max-w-xl mb-10">
-          Fascinated by systems, clarity, and delightful user experiences.
-        </p>
-
-        {/* Primary CTA — accent gold, underline, keyboard accessible */}
-        <a
-          href={site.cvPath}
-          download
-          className="inline-block text-accent hover:text-accent-hover underline underline-offset-4 transition-colors text-base font-medium"
-        >
-          Download CV
-        </a>
       </div>
     </section>
   );
