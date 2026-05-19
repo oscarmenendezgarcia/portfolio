@@ -8,7 +8,9 @@ const STATUS_LABEL: Record<ProjectCard["status"], string> = {
 
 function statusClasses(status: ProjectCard["status"]): string {
   switch (status) {
+    // #166534 on #dcfce7 → ~7:1 contrast (AAA)
     case "in-progress": return "text-[#166534] bg-[#dcfce7]";
+    // text-secondary on surface-elevated → ≥4.5:1 on light
     case "launched":    return "text-text-secondary bg-surface-elevated";
     case "archived":    return "text-text-secondary/60 bg-transparent";
   }
