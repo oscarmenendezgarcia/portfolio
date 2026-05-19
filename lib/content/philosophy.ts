@@ -10,17 +10,17 @@ export type Principle = {
 export const PRINCIPLES: readonly Principle[] = [
   {
     number: "1.",
-    title: "Clarity over cleverness.",
-    body: "Systems should be obvious to understand. The best code is the code that a newcomer can read without a guide.",
+    title: "Cloud-native by default.",
+    body: "Stateless services, declarative deploys, and infrastructure that can be rebuilt from a single commit. If it can't be killed and respawned, it's a liability.",
   },
   {
     number: "2.",
-    title: "User-centered from day one.",
-    body: "Technology serves people, not the reverse. Every architectural decision is a UX decision in disguise.",
+    title: "Observability is not optional.",
+    body: "Every microservice ships with structured logs, RED metrics and traces from day one. You cannot operate what you cannot see.",
   },
   {
     number: "3.",
-    title: "Minimize until essential.",
-    body: "Simplicity is earned, not given. Remove everything that doesn't carry its weight — then remove it again.",
+    title: "Automate the path to production.",
+    body: "Pipelines should make the safe thing the easy thing. ArgoCD, GitHub Actions and a green test suite beat heroics every time.",
   },
 ] as const;
