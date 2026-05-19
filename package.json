@@ -6,9 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --experimental-strip-types --experimental-loader './__tests__/loader.mjs' --test '__tests__/**/*.test.ts'",
+    "test:report": "node --experimental-strip-types --experimental-loader './__tests__/loader.mjs' --test '__tests__/**/*.test.ts' 2>&1 | grep -E 'pass|fail|✖'"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.75",
+    "@ai-sdk/react": "^3.0.186",
+    "ai": "^6.0.184",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4"

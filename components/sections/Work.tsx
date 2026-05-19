@@ -1,130 +1,91 @@
-// Server Component — Work section: responsive grid of highlighted projects.
-// Data lives in lib/site.ts; numbering is auto-generated from array index.
-
 import { projects as siteProjects, type ProjectCard } from "@/lib/site";
 
-// ─── Status helpers ───────────────────────────────────────────────────────────
-
 const STATUS_LABEL: Record<ProjectCard["status"], string> = {
-  "in-progress": "In Development",
+  "in-progress": "In progress",
   launched: "Launched",
   archived: "Archived",
 };
 
-/**
- * Returns Tailwind classes for the status badge pill.
- * Colors are arbitrary values because these states don't have named tokens.
- */
 function statusClasses(status: ProjectCard["status"]): string {
   switch (status) {
-    case "in-progress":
-      return "bg-[#1a4d2e] text-[#4ade80]";
-    case "launched":
-      return "bg-[#333333] text-text-primary";
-    case "archived":
-      return "bg-[#4d4d4d] text-text-secondary";
+    // #166534 on #dcfce7 → ~7:1 contrast (AAA)
+    case "in-progress": return "text-[#166534] bg-[#dcfce7]";
+    // text-secondary on surface-elevated → ≥4.5:1 on light
+    case "launched":    return "text-text-secondary bg-surface-elevated";
+    case "archived":    return "text-text-secondary/60 bg-transparent";
   }
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 interface WorkProps {
-  /** Override the default project list (useful for testing / story variants). */
   projects?: ProjectCard[];
-  /** Cap how many projects appear in the grid. Default: 4. */
   maxProjects?: number;
 }
 
-export default function Work({
-  projects = siteProjects,
-  maxProjects = 4,
-}: WorkProps) {
+export default function Work({ projects = siteProjects, maxProjects = 4 }: WorkProps) {
   const displayed = projects.slice(0, maxProjects);
 
   return (
-    <section
-      id="work"
-      aria-labelledby="work-heading"
-      className="py-20 border-t border-border"
-    >
+    <section id="work" aria-labelledby="work-heading" className="py-12">
       <div className="max-w-[900px] mx-auto px-4 md:px-6 lg:px-10">
-        {/* Section heading */}
         <h2
           id="work-heading"
-          className="text-2xl lg:text-4xl font-semibold text-text-primary mb-10"
+          className="text-2xl lg:text-4xl font-semibold text-text-primary tracking-tight mb-8"
         >
           Work
         </h2>
 
-        {/* Responsive grid: 1 col mobile → 2 cols ≥768px */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {displayed.map((project, index) => {
-            // Auto-generate "01/", "02/", … from array position
             const number = String(index + 1).padStart(2, "0");
             const isExternal = project.href.startsWith("http");
 
             return (
-              <article
+              <div
                 key={project.id}
-                className="flex flex-col bg-surface border border-border rounded-[var(--radius-md)] p-4 md:p-5 hover:bg-surface-elevated transition-colors duration-150 ease-out"
+                className="p-[1px] rounded-[calc(var(--radius-md)+1px)] bg-gradient-to-b from-black/[0.05] to-transparent hover:from-black/[0.09] transition-all duration-200 group"
               >
-                {/* ── Project number badge ────────────────────────────── */}
-                <span
-                  aria-hidden="true"
-                  className="text-xs font-mono font-bold text-accent mb-3 leading-none"
-                >
-                  {number}/
-                </span>
+                <article className="flex flex-col bg-surface rounded-[var(--radius-md)] p-5 h-full group-hover:bg-surface-elevated transition-colors duration-200">
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="text-[11px] font-mono text-accent/60 leading-none">
+                      {number}
+                    </span>
+                    <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 tracking-wide uppercase ${statusClasses(project.status)}`}>
+                      {STATUS_LABEL[project.status]}
+                    </span>
+                  </div>
 
-                {/* ── Title ───────────────────────────────────────────── */}
-                <h3 className="text-lg font-semibold text-text-primary mb-2 leading-snug">
-                  {project.title}
-                </h3>
-
-                {/* ── Description ─────────────────────────────────────── */}
-                <p className="text-sm text-text-secondary leading-relaxed mb-3 flex-1">
-                  {project.description}
-                </p>
-
-                {/* ── Role ────────────────────────────────────────────── */}
-                <p className="text-[13px] text-accent mb-3">{project.role}</p>
-
-                {/* ── Tech stack badges ───────────────────────────────── */}
-                <ul
-                  aria-label="Tech stack"
-                  className="flex flex-wrap gap-1.5 mb-4"
-                >
-                  {project.stack.map((tech) => (
-                    <li
-                      key={tech}
-                      className="text-[12px] text-text-secondary border border-border rounded-full px-2 py-0.5 leading-tight"
-                    >
-                      {tech}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* ── Footer: status badge + view link ────────────────── */}
-                <div className="flex items-center justify-between gap-2 mt-auto">
-                  {/* Status pill */}
-                  <span
-                    className={`text-[11px] font-medium rounded-full px-2 py-0.5 leading-tight ${statusClasses(project.status)}`}
-                  >
-                    {STATUS_LABEL[project.status]}
-                  </span>
-
-                  {/* View link */}
                   <a
                     href={project.href}
                     target={isExternal ? "_blank" : undefined}
                     rel={isExternal ? "noopener noreferrer" : undefined}
-                    aria-label={`View ${project.title}${isExternal ? " (opens in new tab)" : ""}`}
-                    className="text-[13px] text-accent hover:text-accent-hover transition-colors duration-150 ease-out"
+                    className="block mb-2"
                   >
-                    View &rarr;
+                    <h3 className="text-base font-semibold text-text-primary leading-snug hover:text-accent transition-colors duration-150">
+                      {project.title}
+                    </h3>
                   </a>
-                </div>
-              </article>
+
+                  <p className="text-sm text-text-secondary leading-relaxed mb-4 flex-1">
+                    {project.description}
+                  </p>
+
+                  <div className="flex items-center justify-between gap-2 mt-auto">
+                    <ul className="flex flex-wrap gap-1.5" aria-label="Tech stack">
+                      {project.stack.slice(0, 3).map((tech) => (
+                        <li key={tech} className="text-[11px] font-mono text-text-secondary/60 border border-border/40 rounded-full px-2 py-0.5">
+                          {tech}
+                        </li>
+                      ))}
+                      {project.stack.length > 3 && (
+                        <li className="text-[11px] font-mono text-text-secondary/40">+{project.stack.length - 3}</li>
+                      )}
+                    </ul>
+                    <span className="text-[11px] text-text-secondary/40 shrink-0 text-right">
+                      {project.role}
+                    </span>
+                  </div>
+                </article>
+              </div>
             );
           })}
         </div>

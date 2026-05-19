@@ -30,7 +30,7 @@ Open [http://localhost:3000](http://localhost:3000) — edits to `app/` and `com
 | Variable | Required | Description |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | No | Canonical URL (e.g. `https://oscar.dev`). Defaults to `https://portfolio.local`. |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | Future | Google Gemini API key for the AI chatbot feature (not yet implemented). |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | **Yes (chatbot)** | Google Gemini API key for `POST /api/chat`. Get a free key at [Google AI Studio](https://aistudio.google.com/apikey). Without this key the chatbot returns `503`; the rest of the site works fine. |
 
 Copy `.env.example` to `.env.local` and set the values. **Never commit `.env.local`.**
 
@@ -69,7 +69,15 @@ portfolio/
 │       ├── Philosophy.tsx  # Principles
 │       └── Contact.tsx     # Social links
 ├── lib/
-│   └── site.ts             # Single source of truth: name, nav, socials, metadata
+│   ├── site.ts             # Single source of truth: name, nav, socials, metadata
+│   ├── content/
+│   │   ├── writing.ts      # Writing section articles (shared with chatbot persona)
+│   │   └── philosophy.ts   # Philosophy principles (shared with chatbot persona)
+│   └── chatbot/
+│       ├── config.ts       # Model ID, limits, generation params
+│       ├── types.ts        # ChatErrorState, RateLimitResult
+│       ├── persona.ts      # buildSystemPrompt() — assembled from lib/site.ts + content
+│       └── rate-limit.ts   # In-memory token-bucket rate limiter
 └── public/
     ├── cv.pdf              # CV download (replace with real file)
     └── og.png              # Open Graph image 1200×630 (replace with branded image)

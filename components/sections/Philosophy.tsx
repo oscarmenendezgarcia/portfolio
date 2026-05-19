@@ -1,63 +1,33 @@
-// Server Component — no client-side JS required.
-
-const PRINCIPLES = [
-  {
-    number: "1.",
-    title: "Clarity over cleverness.",
-    body: "Systems should be obvious to understand. The best code is the code that a newcomer can read without a guide.",
-  },
-  {
-    number: "2.",
-    title: "User-centered from day one.",
-    body: "Technology serves people, not the reverse. Every architectural decision is a UX decision in disguise.",
-  },
-  {
-    number: "3.",
-    title: "Minimize until essential.",
-    body: "Simplicity is earned, not given. Remove everything that doesn't carry its weight — then remove it again.",
-  },
-] as const;
+import { PRINCIPLES } from "@/lib/content/philosophy";
 
 export default function Philosophy() {
   return (
-    <section
-      id="philosophy"
-      aria-labelledby="philosophy-heading"
-      className="py-20 border-t border-border"
-    >
+    <section id="philosophy" aria-labelledby="philosophy-heading" className="py-12">
       <div className="max-w-[900px] mx-auto px-6 lg:px-10">
         <h2
           id="philosophy-heading"
-          className="text-2xl lg:text-4xl font-semibold text-text-primary mb-10"
+          className="text-2xl lg:text-4xl font-semibold text-text-primary tracking-tight mb-8"
         >
           Philosophy
         </h2>
 
-        <p className="text-base text-text-secondary leading-relaxed mb-10 max-w-xl">
-          The work I do is shaped by a few core beliefs — about software, about
-          teams, and about what it means to build something worth using.
-        </p>
-
-        <div className="flex flex-col gap-8">
+        <ol className="flex flex-col divide-y divide-border/20" role="list">
           {PRINCIPLES.map((principle) => (
-            <div key={principle.number} className="flex gap-6">
-              <span
-                className="text-text-secondary font-mono text-sm mt-1 shrink-0 w-5"
-                aria-hidden="true"
-              >
-                {principle.number}
+            <li key={principle.number} className="flex gap-5 py-4 first:pt-0 last:pb-0">
+              <span className="text-[11px] font-mono text-accent/50 mt-[3px] shrink-0 w-4 tabular-nums" aria-hidden="true">
+                {String(principle.number).padStart(2, "0")}
               </span>
               <div>
-                <p className="text-base font-semibold text-text-primary mb-1">
+                <p className="text-sm font-semibold text-text-primary mb-0.5 leading-snug">
                   {principle.title}
                 </p>
-                <p className="text-sm text-text-secondary leading-relaxed">
+                <p className="text-sm text-text-secondary/80 leading-relaxed">
                   {principle.body}
                 </p>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

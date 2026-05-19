@@ -1,27 +1,39 @@
 @AGENTS.md
 
-## Design Skills (MANDATORY)
+## Design Skills (MANDATORY — must use the Skill tool, not just read)
 
 ### Developer Agent — UI implementation
 
-Before writing any component, animation, or visual decision, invoke in order:
+You MUST call the `Skill` tool for each of these before writing any component or making any visual decision. Reading this file is not enough — you must actually invoke them:
 
-1. `minimalist-ui` — minimalismo como principio rector
-2. `design-taste-frontend` — layout, tipografía, motion y spacing premium
-3. `emil-design-eng` — polish, micro-interacciones e invisible details
-4. `impeccable` — anti-pattern detection (29 reglas); evita estética genérica AI
-5. `high-end-visual-design` — calidad visual premium
+```
+Skill({ skill: "minimalist-ui" })         // Step 1 — minimalismo como principio rector
+Skill({ skill: "design-taste-frontend" }) // Step 2 — layout, tipografía, motion, spacing premium
+Skill({ skill: "emil-design-eng" })       // Step 3 — polish, micro-interacciones, invisible details
+Skill({ skill: "impeccable" })            // Step 4 — anti-pattern detection (29 reglas)
+Skill({ skill: "high-end-visual-design"}) // Step 5 — calidad visual premium
+```
 
-Zero inline styles. Tailwind tokens only. Use `vercel-plugin:react-best-practices` after editing TSX components.
+After editing TSX components, also invoke:
+```
+Skill({ skill: "vercel-plugin:react-best-practices" })
+```
+
+Zero inline styles. Tailwind tokens only.
 
 ### UX/API Designer — Diseño de pantallas
 
-Invoke in order:
+You MUST call the `Skill` tool before designing any screen or wireframe:
 
-1. `ui-ux-pro-max` — paletas, tipografía, layout, guías WCAG
-2. `stitch-design-taste` — DESIGN.md semántico para Stitch; tipografía estricta, color calibrado, layouts asimétricos
-3. `minimalist-ui` — constraint de minimalismo para el portfolio
+```
+Skill({ skill: "ui-ux-pro-max:ui-ux-pro-max" }) // Step 1 — paletas, tipografía, layout, WCAG
+Skill({ skill: "stitch-design-taste" })          // Step 2 — tipografía estricta, color calibrado
+Skill({ skill: "minimalist-ui" })                // Step 3 — constraint de minimalismo
+```
 
 ### AI Chatbot (task: AI Assistant)
 
-Use `vercel-plugin:ai-sdk` for all AI SDK decisions (streaming, Gemini provider, system prompt, tool use).
+You MUST invoke before any AI SDK decision:
+```
+Skill({ skill: "vercel-plugin:ai-sdk" })
+```
