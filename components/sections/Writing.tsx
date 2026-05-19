@@ -1,5 +1,16 @@
 import { ARTICLES } from "@/lib/content/writing";
 
+/** Sorted newest-first as a defensive measure (source of truth is the array above). */
+const sortedArticles = [...ARTICLES].sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
+const PLATFORM_LABEL: Record<Platform, string> = {
+  LinkedIn: "LinkedIn",
+  X: "X (Twitter)",
+  Blog: "Blog",
+};
+
 export default function Writing() {
   return (
     <section id="writing" aria-labelledby="writing-heading" className="py-12">

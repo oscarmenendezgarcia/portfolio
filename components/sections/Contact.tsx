@@ -6,6 +6,8 @@ export default function Contact() {
   return (
     <section id="contact" aria-labelledby="contact-heading" className="py-12">
       <div className="max-w-[900px] mx-auto px-6 lg:px-10">
+
+        {/* ── Heading ─────────────────────────────────────────────────────── */}
         <h2
           id="contact-heading"
           className="text-2xl lg:text-4xl font-semibold text-text-primary tracking-tight mb-4"
@@ -40,6 +42,7 @@ export default function Contact() {
               </a>
             ))}
         </div>
+
       </div>
     </section>
   );
