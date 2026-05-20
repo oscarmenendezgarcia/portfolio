@@ -6,19 +6,18 @@
    ─────────────────────────────────────────────────────────────────────────── */
 
 @theme {
-  /* Colors */
-  --color-bg: #0a0a0a;
-  --color-surface: #1a1a1a;
-  --color-surface-elevated: #242424;
-  --color-text-primary: #f5f5f5;
-  --color-text-secondary: #999999;
-  --color-border: #333333;
-  --color-accent: #d4af37;
-  --color-accent-hover: #e6c547;
+  /* Colors — warm cream light theme (all pairs ≥4.5:1 contrast ratio) */
+  --color-bg: #F7F5F0;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #EEEAE3;
+  --color-text-primary: #111111;
+  --color-text-secondary: #595550;
+  --color-border: #D9D5CC;
+  --color-accent: #7A6015;
+  --color-accent-hover: #5E4910;
 
   /* Typography — wired to CSS vars set by next/font in layout.tsx */
   --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
 
   /* Border radius scale */
   --radius-sm: 4px;

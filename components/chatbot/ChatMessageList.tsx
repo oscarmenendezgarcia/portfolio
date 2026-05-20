@@ -46,13 +46,12 @@ export default function ChatMessageList({
     const newMessageAdded = messages.length !== prevLengthRef.current;
     prevLengthRef.current = messages.length;
 
+    const el = containerRef.current;
     if (newMessageAdded) {
-      // New message — always scroll regardless of user position
       setUserScrolledUp(false);
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      el?.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     } else if (isStreaming && !userScrolledUp) {
-      // Streaming chunk — only scroll if user hasn't scrolled up
-      bottomRef.current?.scrollIntoView({ behavior: "instant" });
+      el?.scrollTo({ top: el.scrollHeight, behavior: "instant" });
     }
   }, [messages, isStreaming, userScrolledUp]);
 
@@ -108,8 +107,9 @@ export default function ChatMessageList({
           <button
             type="button"
             onClick={() => {
+              const el = containerRef.current;
               setUserScrolledUp(false);
-              bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+              el?.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
             }}
             className="pointer-events-auto text-xs bg-surface-elevated border border-border text-text-secondary hover:text-text-primary px-3 py-1 rounded-full transition-colors shadow-sm"
           >

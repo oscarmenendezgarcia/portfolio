@@ -69,13 +69,13 @@ export const site = {
   /** Canonical URL. Override with NEXT_PUBLIC_SITE_URL in production. */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio.local",
   /** ≤160 characters — used in <meta name="description"> and OpenGraph */
-  description:
-    "Senior Backend Engineer specialising in cloud-native microservices with Java, Spring and Micronaut. Building reliable, observable systems at empathy.co.",
-  /** 2-sentence narrative for the Hero section. */
+  description: "Full-stack systems, AI products, and interfaces worth using.",
+  /** 2-sentence narrative — used by the chatbot persona. */
   bio: "I design and run cloud-native microservices for empathy.co, where I've spent the last seven years scaling search-relevance infrastructure. I care about CI/CD that gets out of the way, observability that pages the right person, and code a teammate can read without a tour guide.",
-  /** Short tagline rendered between the role line and bio in Hero. */
+  /** Tech summary — used by the chatbot persona. */
   tagline: "Cloud-native systems · Java · Micronaut · Kubernetes",
   nav: [
+    { label: "Assistant", href: "#assistant" },
     { label: "Work", href: "#work" },
     { label: "Philosophy", href: "#philosophy" },
     { label: "Contact", href: "#contact" },

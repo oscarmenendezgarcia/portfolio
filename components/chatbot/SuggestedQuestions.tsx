@@ -3,6 +3,7 @@
 const SUGGESTIONS = [
   "What are you working on?",
   "Are you available for new projects?",
+  "What's your tech stack?",
   "How do I contact Oscar?",
 ] as const;
 
@@ -11,17 +12,13 @@ interface SuggestedQuestionsProps {
   disabled: boolean;
 }
 
-/**
- * Initial chip row shown when the conversation is empty.
- * Clicking a chip submits that text as the user's first message.
- */
 export default function SuggestedQuestions({
   onSelect,
   disabled,
 }: SuggestedQuestionsProps) {
   return (
     <div
-      className="px-4 py-3 flex flex-col gap-2"
+      className="px-5 py-4 flex flex-wrap gap-2"
       aria-label="Suggested questions"
     >
       {SUGGESTIONS.map((q) => (
@@ -31,11 +28,12 @@ export default function SuggestedQuestions({
           disabled={disabled}
           onClick={() => onSelect(q)}
           className={[
-            "text-left text-xs text-text-secondary px-3 py-2 rounded-md",
-            "border border-border",
-            "hover:border-accent hover:text-text-primary",
-            "disabled:opacity-50 disabled:cursor-not-allowed",
-            "transition-colors",
+            "text-xs text-text-secondary px-3 py-1.5 rounded-full",
+            "border border-border bg-transparent",
+            "hover:border-accent/60 hover:text-text-primary hover:bg-surface-elevated",
+            "active:scale-[0.97]",
+            "disabled:opacity-40 disabled:cursor-not-allowed",
+            "transition-all duration-150",
           ].join(" ")}
         >
           {q}

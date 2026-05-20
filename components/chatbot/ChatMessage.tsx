@@ -37,8 +37,8 @@ export default function ChatMessage({
         className={[
           "rounded-md px-3 py-2 text-sm leading-relaxed",
           isUser
-            ? "bg-surface-elevated text-text-primary max-w-[80%]"
-            : "text-text-primary max-w-[92%]",
+            ? "bg-[#2C2925] text-[#F7F5F0] max-w-[80%]"
+            : "bg-surface-elevated text-text-primary max-w-[92%]",
         ].join(" ")}
       >
         {text}
