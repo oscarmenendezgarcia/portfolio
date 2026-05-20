@@ -48,10 +48,11 @@ describe("buildSystemPrompt", () => {
     );
   });
 
-  it("includes at least one writing article title", () => {
+  it("does not include placeholder writing articles", () => {
     const prompt = buildSystemPrompt();
+    // Writing section is hidden until real articles exist — prompt must not cite placeholder titles
     const found = ARTICLES.some((a) => prompt.includes(a.title));
-    assert.ok(found, "No writing article titles found in prompt");
+    assert.ok(!found, "Placeholder writing article titles should not appear in prompt");
   });
 
   it("includes at least one philosophy principle", () => {

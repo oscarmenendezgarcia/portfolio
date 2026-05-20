@@ -45,15 +45,20 @@ describe("experience data", () => {
 });
 
 describe("projects data", () => {
-  it("has exactly 1 entry", () => {
-    assert.strictEqual(projects.length, 1);
+  it("has at least 2 entries", () => {
+    assert.ok(projects.length >= 2, `Expected at least 2 projects, got ${projects.length}`);
   });
 
-  it("first entry title starts with 'Prism'", () => {
+  it("includes OPTCG Search as first entry", () => {
     assert.ok(
-      projects[0].title.startsWith("Prism"),
-      `Expected title to start with 'Prism', got '${projects[0].title}'`
+      projects[0].title.includes("OPTCG"),
+      `Expected first project to include 'OPTCG', got '${projects[0].title}'`
     );
+  });
+
+  it("includes Prism as an entry", () => {
+    const prism = projects.find((p) => p.title.startsWith("Prism"));
+    assert.ok(prism, "Expected a Prism project entry");
   });
 
   it("does not include placeholder projects", () => {
