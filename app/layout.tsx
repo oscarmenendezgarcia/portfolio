@@ -1,26 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { site } from "@/lib/site";
 import Navbar from "@/components/layout/Navbar";
 import "./globals.css";
 
-// T-003: Inter as primary sans-serif, self-hosted at build time — zero CLS, no external font requests
-const inter = Inter({
+const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-// T-003: JetBrains Mono as monospace accent
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   display: "swap",
 });
 
 // T-005: Viewport — themeColor moved from Metadata to Viewport in Next.js 16
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#F7F5F0",
 };
 
 // T-005: Base metadata — Next.js merges this with per-route overrides via the template
@@ -65,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${plusJakarta.variable}`}
     >
       <body className="bg-bg text-text-primary min-h-screen flex flex-col">
         {/* Skip-to-content: visible on focus for keyboard users (WCAG 2.1 AA) */}
@@ -74,7 +66,7 @@ export default function RootLayout({
         </a>
 
         {/* Fixed navigation header — 64px mobile / 80px desktop; sections compensate via scroll-margin-top */}
-        <header className="fixed top-0 w-full z-50 h-16 md:h-20 border-b border-border bg-bg/90 backdrop-blur-sm">
+        <header className="fixed top-0 w-full z-50 h-16 md:h-20 bg-bg/90 backdrop-blur-sm">
           <Navbar />
         </header>
 

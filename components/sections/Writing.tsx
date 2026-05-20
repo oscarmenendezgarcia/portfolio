@@ -1,97 +1,62 @@
-// Server Component — placeholder stub. Content populated in the Writing feature task.
+import { ARTICLES } from "@/lib/content/writing";
 
-type Article = {
-  title: string;
-  date: string; // ISO 8601
-  dateDisplay: string;
-  category: string;
-  excerpt: string;
-  href: string;
+/** Sorted newest-first as a defensive measure (source of truth is the array above). */
+const sortedArticles = [...ARTICLES].sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
+const PLATFORM_LABEL: Record<Platform, string> = {
+  LinkedIn: "LinkedIn",
+  X: "X (Twitter)",
+  Blog: "Blog",
 };
-
-const PLACEHOLDER_ARTICLES: Article[] = [
-  {
-    title: "Building a Minimalist Design System with Tailwind v4",
-    date: "2026-03-15",
-    dateDisplay: "Mar 15, 2026",
-    category: "Design Systems",
-    excerpt:
-      "How I replaced a complex tailwind.config.js with a handful of CSS custom properties and never looked back.",
-    href: "#",
-  },
-  {
-    title: "TypeScript Satisfies vs As: When to Use Each",
-    date: "2026-03-01",
-    dateDisplay: "Mar 1, 2026",
-    category: "TypeScript",
-    excerpt:
-      "The satisfies operator quietly became my most-used TypeScript feature. Here's why.",
-    href: "#",
-  },
-  {
-    title: "Why I Stopped Using JavaScript Scroll Libraries",
-    date: "2026-02-10",
-    dateDisplay: "Feb 10, 2026",
-    category: "Performance",
-    excerpt:
-      "Native scroll-behavior: smooth does 95% of what Lenis does, ships zero bytes, and respects prefers-reduced-motion for free.",
-    href: "#",
-  },
-];
 
 export default function Writing() {
   return (
-    <section
-      id="writing"
-      aria-labelledby="writing-heading"
-      className="py-20 border-t border-border"
-    >
+    <section id="writing" aria-labelledby="writing-heading" className="py-12">
       <div className="max-w-[900px] mx-auto px-6 lg:px-10">
         <h2
           id="writing-heading"
-          className="text-2xl lg:text-4xl font-semibold text-text-primary mb-10"
+          className="text-2xl lg:text-4xl font-semibold text-text-primary tracking-tight mb-8"
         >
           Writing
         </h2>
 
-        <div className="flex flex-col gap-8">
-          {PLACEHOLDER_ARTICLES.map((article) => (
-            <article
-              key={article.title}
-              className="border-b border-border pb-8 last:border-0 hover:bg-surface-elevated -mx-4 px-4 rounded-[var(--radius-md)] transition-colors"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <time
-                  dateTime={article.date}
-                  className="text-xs text-text-secondary"
-                >
+        <ol className="flex flex-col divide-y divide-border/20" role="list">
+          {ARTICLES.map((article) => (
+            <li key={article.date + article.title} className="py-4 first:pt-0 last:pb-0">
+              <div className="flex items-baseline gap-2 mb-1.5">
+                <time dateTime={article.date} className="text-[11px] font-mono text-text-secondary/50 tabular-nums shrink-0">
                   {article.dateDisplay}
                 </time>
-                <span className="text-xs text-border" aria-hidden="true">
-                  ·
-                </span>
-                <span className="text-xs text-text-secondary font-mono">
-                  {article.category}
+                <span aria-hidden="true" className="text-border/40 text-[11px]">·</span>
+                <span className="text-[11px] font-mono text-text-secondary/50 uppercase tracking-wide">
+                  {article.platform}
                 </span>
               </div>
 
-              <h3 className="text-base font-semibold text-text-primary mb-2 leading-snug">
-                {article.title}
-              </h3>
-
-              <p className="text-sm text-text-secondary leading-relaxed mb-3">
-                {article.excerpt}
-              </p>
-
               <a
                 href={article.href}
-                className="text-sm text-accent hover:text-accent-hover transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-baseline gap-1"
               >
-                Read more &rarr;
+                <span className="text-sm font-medium text-text-primary group-hover:text-accent transition-colors duration-150 leading-snug">
+                  {article.title}
+                </span>
+                <span className="text-text-secondary/40 group-hover:text-accent/60 transition-colors text-xs" aria-hidden="true">
+                  &nbsp;&rarr;
+                </span>
               </a>
-            </article>
+
+              {article.excerpt && (
+                <p className="text-sm text-text-secondary/70 leading-relaxed mt-1 max-w-2xl">
+                  {article.excerpt}
+                </p>
+              )}
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

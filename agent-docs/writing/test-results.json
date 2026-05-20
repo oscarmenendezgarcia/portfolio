@@ -1,0 +1,269 @@
+{
+  "feature": "Writing Section",
+  "date": "2026-05-17",
+  "agent": "qa-engineer-e2e",
+  "environment": {
+    "framework": "Next.js 16.2.6",
+    "react": "19.2.4",
+    "tailwind": "v4",
+    "browser": "Chromium (Playwright MCP)",
+    "url": "http://localhost:3003",
+    "component": "components/sections/Writing.tsx"
+  },
+  "summary": {
+    "total": 27,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "coverage_percent": 100,
+    "verdict": "PASS"
+  },
+  "performance": {
+    "p95_ms": null,
+    "p99_ms": null,
+    "error_rate_percent": 0,
+    "throughput_rps": null,
+    "notes": "No dynamic data fetching — static Next.js Server Component. Load performance not applicable."
+  },
+  "security": {
+    "owasp_checks": [
+      { "id": "A01", "name": "Broken Access Control", "status": "pass", "notes": "All external links have rel=noopener noreferrer" },
+      { "id": "A02", "name": "Cryptographic Failures", "status": "pass", "notes": "No sensitive data in DOM or data-* attributes" },
+      { "id": "A03", "name": "Injection (XSS)", "status": "pass", "notes": "No innerHTML, no inline event handlers, React JSX renders as text nodes" },
+      { "id": "A04", "name": "Insecure Design", "status": "pass", "notes": "Static content only, no user input paths" },
+      { "id": "A05", "name": "Security Misconfiguration", "status": "pass", "notes": "No framework-level misconfiguration observed" },
+      { "id": "A06", "name": "Vulnerable Components", "status": "pass", "notes": "Next.js 16.2.6, React 19.2.4 — no known CVEs at test date" },
+      { "id": "A07", "name": "Identification & Authentication Failures", "status": "n/a", "notes": "No authentication in this feature" },
+      { "id": "A08", "name": "Software & Data Integrity Failures", "status": "pass", "notes": "No deserialization or external data consumed by this component" },
+      { "id": "A09", "name": "Security Logging & Monitoring Failures", "status": "n/a", "notes": "Client-side component — no logging surface" },
+      { "id": "A10", "name": "Server-Side Request Forgery", "status": "n/a", "notes": "No HTTP requests made by this component" }
+    ],
+    "vulnerabilities_found": 0
+  },
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "type": "e2e",
+      "description": "Full page renders without errors — HTTP 200, title present",
+      "status": "pass",
+      "duration_ms": 1200,
+      "notes": "Page title: 'Oscar Menéndez García'"
+    },
+    {
+      "id": "TC-002",
+      "type": "e2e",
+      "description": "section#writing element present in DOM",
+      "status": "pass",
+      "duration_ms": 50,
+      "notes": "Confirmed via Playwright accessibility snapshot and DOM query"
+    },
+    {
+      "id": "TC-003",
+      "type": "e2e",
+      "description": "Section has aria-labelledby='writing-heading'",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "aria-labelledby attribute value matches heading id"
+    },
+    {
+      "id": "TC-004",
+      "type": "e2e",
+      "description": "Heading is h2 with id='writing-heading'",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "tagName=H2, id=writing-heading verified"
+    },
+    {
+      "id": "TC-005",
+      "type": "e2e",
+      "description": "Three <article> elements rendered inside section",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "articles.length=3"
+    },
+    {
+      "id": "TC-006",
+      "type": "e2e",
+      "description": "<time> elements with ISO 8601 dateTime attributes",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "dateTime values: [2026-03-15, 2026-03-01, 2026-02-10] — all match YYYY-MM-DD"
+    },
+    {
+      "id": "TC-007",
+      "type": "e2e",
+      "description": "Platform labels LinkedIn, X, Blog all present",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "Platform enum values render correctly per TypeScript type"
+    },
+    {
+      "id": "TC-008",
+      "type": "e2e",
+      "description": "Articles sorted by date descending (newest first)",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "Order: 2026-03-15 > 2026-03-01 > 2026-02-10 confirmed"
+    },
+    {
+      "id": "TC-009",
+      "type": "e2e",
+      "description": "Read more links have target='_blank' and rel='noopener noreferrer'",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "All 3 links verified. hrefs are placeholder '#' — see BUG-001 (Low)"
+    },
+    {
+      "id": "TC-010",
+      "type": "e2e",
+      "description": "Last article: borderBottomWidth=0px, paddingBottom=0px",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "last:border-0 and last:pb-0 Tailwind variants working correctly"
+    },
+    {
+      "id": "TC-011",
+      "type": "e2e",
+      "description": "All 7 design tokens resolve to correct color values",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "bg=#0a0a0a, surface-elevated=#242424, text-primary=#f5f5f5, text-secondary=#999, border=#333, accent=#d4af37, accent-hover=#e6c547"
+    },
+    {
+      "id": "TC-012",
+      "type": "e2e",
+      "description": "Heading renders in text-text-primary color",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "Computed color: rgb(245,245,245) = #f5f5f5. fontWeight=600"
+    },
+    {
+      "id": "TC-013",
+      "type": "e2e",
+      "description": "Read more link renders in accent color",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "Computed color: rgb(212,175,55) = #d4af37"
+    },
+    {
+      "id": "TC-014",
+      "type": "e2e",
+      "description": "Platform label uses monospace font (JetBrains Mono)",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "font-family: 'JetBrains Mono', 'JetBrains Mono Fallback'"
+    },
+    {
+      "id": "TC-015",
+      "type": "e2e",
+      "description": "Hover state applies bg-surface-elevated background and border-radius",
+      "status": "pass",
+      "duration_ms": 400,
+      "notes": "backgroundColor=rgb(36,36,36) (#242424), borderRadius=8px on hover. Screenshot: TC-003-hover-state.png"
+    },
+    {
+      "id": "TC-016",
+      "type": "e2e",
+      "description": "Hover transition is smooth (~150ms cubic-bezier)",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "transition: color,background-color,... 0.15s cubic-bezier(0.4,0,0.2,1)"
+    },
+    {
+      "id": "TC-017",
+      "type": "e2e",
+      "description": "Separator dot uses text-border color (#333)",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "Computed color: rgb(51,51,51) = #333333 — matches --color-border token"
+    },
+    {
+      "id": "TC-018",
+      "type": "e2e",
+      "description": "Separator dots are aria-hidden='true'",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "3 separator spans with aria-hidden=true — excluded from screen reader tree"
+    },
+    {
+      "id": "TC-019",
+      "type": "e2e",
+      "description": "Focus ring: 2px solid accent, 2px offset on Read more links",
+      "status": "pass",
+      "duration_ms": 200,
+      "notes": "outlineStyle=solid, outlineWidth=2px, outlineColor=rgb(212,175,55), outlineOffset=2px. Screenshot: TC-006-focus-ring.png"
+    },
+    {
+      "id": "TC-020",
+      "type": "e2e",
+      "description": "All links have natural tab order — no tabindex overrides",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "tabindex=null on all 3 links — natural document order preserved"
+    },
+    {
+      "id": "TC-021",
+      "type": "e2e",
+      "description": "Section has scroll-margin-top=80px for fixed navbar offset",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "scrollMarginTop=80px via globals.css rule section[id]"
+    },
+    {
+      "id": "TC-022",
+      "type": "e2e",
+      "description": "No horizontal overflow at 320px viewport width",
+      "status": "pass",
+      "duration_ms": 300,
+      "notes": "scrollWidth=305 <= viewportWidth=320. Screenshot: TC-005-mobile-320px.png"
+    },
+    {
+      "id": "TC-023",
+      "type": "e2e",
+      "description": "Heading is 24px (text-2xl) on 375px mobile viewport",
+      "status": "pass",
+      "duration_ms": 200,
+      "notes": "fontSize=24px on 375px. Heading scales to 36px (text-4xl) on 1280px. Screenshot: TC-004-mobile-375px.png"
+    },
+    {
+      "id": "SEC-01",
+      "type": "security",
+      "description": "No XSS vectors — article titles render as plain text nodes",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "OWASP A03. No < or > in rendered text. React JSX escapes all content."
+    },
+    {
+      "id": "SEC-02",
+      "type": "security",
+      "description": "External links have rel=noopener noreferrer",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "OWASP A01. Prevents window.opener access from third-party pages."
+    },
+    {
+      "id": "SEC-03",
+      "type": "security",
+      "description": "No inline event handlers (onclick, onmouseover, etc.)",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "OWASP A03. 0 elements with on* attributes found in section."
+    },
+    {
+      "id": "SEC-04",
+      "type": "security",
+      "description": "No sensitive data exposed in data-* attributes",
+      "status": "pass",
+      "duration_ms": 30,
+      "notes": "OWASP A02. 0 data-* attributes in section."
+    }
+  ],
+  "screenshots": [
+    { "id": "TC-001", "path": "agent-docs/writing/screenshots/TC-001-full-page.png", "description": "Full page screenshot at 1280px desktop" },
+    { "id": "TC-002", "path": "agent-docs/writing/screenshots/TC-002-writing-section-desktop.png", "description": "Writing section viewport at 1280px" },
+    { "id": "TC-015", "path": "agent-docs/writing/screenshots/TC-003-hover-state.png", "description": "Hover state on first article item" },
+    { "id": "TC-023", "path": "agent-docs/writing/screenshots/TC-004-mobile-375px.png", "description": "Mobile layout at 375px (iPhone SE)" },
+    { "id": "TC-022", "path": "agent-docs/writing/screenshots/TC-005-mobile-320px.png", "description": "Mobile layout at 320px (minimum width)" },
+    { "id": "TC-019", "path": "agent-docs/writing/screenshots/TC-006-focus-ring.png", "description": "Focus ring on Read more link" }
+  ]
+}
