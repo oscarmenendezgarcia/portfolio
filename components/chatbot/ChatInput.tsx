@@ -91,7 +91,7 @@ export default function ChatInput({
             type="button"
             onClick={onStop}
             aria-label="Stop generating"
-            className="shrink-0 w-9 h-9 rounded-md bg-surface-elevated border border-border text-text-secondary hover:text-text-primary hover:border-accent transition-colors flex items-center justify-center"
+            className="shrink-0 w-10 h-10 rounded-md bg-surface-elevated border border-border text-text-secondary hover:text-text-primary hover:border-accent transition-colors flex items-center justify-center"
           >
             {/* Stop icon (filled square) */}
             <svg
@@ -111,7 +111,7 @@ export default function ChatInput({
             disabled={!canSend}
             aria-label="Send message"
             className={[
-              "shrink-0 w-9 h-9 rounded-md border transition-colors flex items-center justify-center",
+              "shrink-0 w-10 h-10 rounded-md border transition-colors flex items-center justify-center",
               canSend
                 ? "bg-surface-elevated border-border text-text-secondary hover:border-accent hover:text-accent"
                 : "bg-surface-elevated border-border text-border cursor-not-allowed",
