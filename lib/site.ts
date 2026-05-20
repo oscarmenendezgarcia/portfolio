@@ -77,7 +77,6 @@ export const site = {
   tagline: "Cloud-native systems · Java · Micronaut · Kubernetes",
   nav: [
     { label: "Work", href: "#work" },
-    { label: "Writing", href: "#writing" },
     { label: "Philosophy", href: "#philosophy" },
     { label: "Contact", href: "#contact" },
   ] satisfies NavLink[],

@@ -4,7 +4,6 @@
 // (ssr: false) so the homepage static payload is unaffected.
 import Hero from "@/components/sections/Hero";
 import Work from "@/components/sections/Work";
-import Writing from "@/components/sections/Writing";
 import Philosophy from "@/components/sections/Philosophy";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/layout/Footer";
@@ -15,7 +14,6 @@ export default function Home() {
     <>
       <Hero />
       <Work />
-      <Writing />
       <Philosophy />
       <Contact />
       <Footer />

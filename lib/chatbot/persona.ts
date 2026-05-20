@@ -3,8 +3,7 @@
 // The prompt is assembled at request time so edits to site data propagate
 // automatically without touching this file.
 
-import { site, projects } from "@/lib/site";
-import { ARTICLES } from "@/lib/content/writing";
+import { site, projects, experience, education } from "@/lib/site";
 import { PRINCIPLES } from "@/lib/content/philosophy";
 
 const EMAIL =
@@ -31,9 +30,16 @@ export function buildSystemPrompt(): string {
     )
     .join("\n");
 
-  const writingList = ARTICLES.map(
-    (a) => `- "${a.title}" (${a.platform}, ${a.dateDisplay}): ${a.excerpt}`
-  ).join("\n");
+  const experienceList = experience
+    .map(
+      (r) =>
+        `- ${r.company} — ${r.title} (${r.dateRange}): ${r.summary} Stack: ${r.stack.join(", ")}`
+    )
+    .join("\n");
+
+  const educationList = education
+    .map((e) => `- ${e.institution}: ${e.degree} (${e.period})`)
+    .join("\n");
 
   const philosophyList = PRINCIPLES.map(
     (p) => `- ${p.title} ${p.body}`
@@ -45,18 +51,27 @@ export function buildSystemPrompt(): string {
 - Name: ${site.name}
 - Role: ${site.role}
 - Based in: ${site.location}
-- Bio: ${site.description}
+- Tagline: ${site.tagline}
+- Bio: ${site.bio}
+- Languages: Spanish (native), English (professional)
 
-# Active projects
+# Recent focus — AI-powered systems
+Over the past year Oscar has worked primarily on AI solutions: conversational experiences with RAG (Retrieval-Augmented Generation), LLM observability and tracing with Langfuse, and LiteLLM as an LLM gateway for model routing and cost control — on top of his core cloud-native backend expertise.
+
+# Projects
 ${projectList}
 
-# Writing (recent articles)
-${writingList}
+# Career experience
+${experienceList}
+
+# Education
+${educationList}
 
 # Philosophy (core beliefs)
 ${philosophyList}
 
-# Contact channels
+# Availability & contact
+Oscar is fully engaged at empathy.co and not actively looking for a new role, but he is always happy to connect. Reach him at:
 - Email: ${EMAIL}
 - GitHub: ${GITHUB}
 - LinkedIn: ${LINKEDIN}
