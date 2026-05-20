@@ -84,7 +84,7 @@ export const site = {
     { label: "GitHub", href: "https://github.com/oscarmenendezgarcia" },
     {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/oscar-men%C3%A9ndez-garc%C3%ADa-81341740/",
+      href: "https://www.linkedin.com/in/oscar-men%C3%A9ndez-garc%C3%ADa-81341740",
     },
     { label: "Email", href: "mailto:oscarmdzgarcia@gmail.com" },
   ] satisfies SocialLink[],
