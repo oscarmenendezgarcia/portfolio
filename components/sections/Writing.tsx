@@ -1,4 +1,6 @@
-import { ARTICLES } from "@/lib/content/writing";
+import { ARTICLES, type Article } from "@/lib/content/writing";
+
+type Platform = Article["platform"];
 
 /** Sorted newest-first as a defensive measure (source of truth is the array above). */
 const sortedArticles = [...ARTICLES].sort(
