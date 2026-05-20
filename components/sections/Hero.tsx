@@ -17,7 +17,7 @@ export default function Hero() {
         {/* Display name */}
         <h1
           id="hero-heading"
-          className="text-4xl lg:text-6xl font-bold text-text-primary leading-[1.05] tracking-[-0.05em] mb-5"
+          className="text-4xl lg:text-6xl font-medium text-text-primary leading-[1.05] tracking-[-0.02em] mb-5"
         >
           {site.name}
         </h1>
