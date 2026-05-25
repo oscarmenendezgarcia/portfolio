@@ -98,6 +98,15 @@ export default function ChatMessageList({
             isStreaming={isStreaming}
           />
         ))}
+        {isStreaming && messages.at(-1)?.role === "user" && (
+          <div className="flex justify-start" aria-label="Assistant is thinking">
+            <div className="rounded-md px-3 py-2 bg-surface-elevated flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-text-secondary/60 animate-bounce [animation-delay:0ms]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-text-secondary/60 animate-bounce [animation-delay:150ms]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-text-secondary/60 animate-bounce [animation-delay:300ms]" />
+            </div>
+          </div>
+        )}
         <div ref={bottomRef} aria-hidden="true" />
       </div>
 
