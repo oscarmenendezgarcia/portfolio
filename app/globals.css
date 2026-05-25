@@ -120,3 +120,26 @@ section[id] {
 .animate-ping-once {
   animation: ping-once 1.5s ease-out 1;
 }
+
+/* Thinking indicator — dot wave shown before the first streaming token */
+@keyframes typing-dot {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.animate-typing-dot {
+  animation: typing-dot 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-typing-dot {
+    animation: none;
+    opacity: 0.6;
+  }
+}
