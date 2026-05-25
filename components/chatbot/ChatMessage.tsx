@@ -12,17 +12,25 @@ interface ChatMessageProps {
 const LINK_CLASSES =
   "text-accent underline underline-offset-2 hover:text-accent-hover break-all";
 
-// depth > 0 skips bold/italic to avoid infinite recursion inside em/strong
-function parseInline(text: string, keyOffset: number, depth = 0): ReactNode[] {
-  // Groups (depth === 0):
-  //  1-3: [label](href)   4: bare URL   5-6: **bold**   7-8: *italic*   9: email
-  // Groups (depth > 0):
-  //  1-3: [label](href)   4: bare URL   5: email
-  const re =
-    depth === 0
-      ? /(\[([^\]]+)\]\((https?:\/\/[^)]+)\))|(https?:\/\/[^\s<>"]+)|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)|([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g
-      : /(\[([^\]]+)\]\((https?:\/\/[^)]+)\))|(https?:\/\/[^\s<>"]+)|([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+// Groups: 1-3 [label](href)  4 bare URL  5 email
+const URL_RE =
+  /(\[([^\]]+)\]\((https?:\/\/[^)]+)\))|(https?:\/\/[^\s<>"]+)|([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
 
+// Groups: 1-3 [label](href)  4 bare URL  5-6 **bold**  7-8 *italic*  9 email
+const INLINE_RE =
+  /(\[([^\]]+)\]\((https?:\/\/[^)]+)\))|(https?:\/\/[^\s<>"]+)|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)|([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+
+function renderLink(key: string, href: string, label: ReactNode): ReactNode {
+  return (
+    <a key={key} href={href} target="_blank" rel="noopener noreferrer" className={LINK_CLASSES}>
+      {label}
+    </a>
+  );
+}
+
+// Only detects links and emails — used inside bold/italic to avoid recursion
+function parseLinksOnly(text: string, keyOffset: number): ReactNode[] {
+  const re = new RegExp(URL_RE.source, "g");
   const nodes: ReactNode[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
@@ -30,23 +38,30 @@ function parseInline(text: string, keyOffset: number, depth = 0): ReactNode[] {
   while ((match = re.exec(text)) !== null) {
     if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index));
     const key = `${keyOffset}-${match.index}`;
+    if (match[1])      nodes.push(renderLink(key, match[3], match[2]));
+    else if (match[4]) nodes.push(renderLink(key, match[4], match[4]));
+    else if (match[5]) nodes.push(renderLink(key, `mailto:${match[5]}`, match[5]));
+    lastIndex = match.index + match[0].length;
+  }
 
-    if (match[1]) {
-      nodes.push(<a key={key} href={match[3]} target="_blank" rel="noopener noreferrer" className={LINK_CLASSES}>{match[2]}</a>);
-    } else if (match[4]) {
-      nodes.push(<a key={key} href={match[4]} target="_blank" rel="noopener noreferrer" className={LINK_CLASSES}>{match[4]}</a>);
-    } else if (depth === 0 && match[5]) {
-      // **bold** — recurse to catch links inside
-      nodes.push(<strong key={key}>{parseInline(match[6], keyOffset * 1000, 1)}</strong>);
-    } else if (depth === 0 && match[7]) {
-      // *italic* — recurse to catch links inside
-      nodes.push(<em key={key}>{parseInline(match[8], keyOffset * 1000, 1)}</em>);
-    } else {
-      // email (group 9 at depth 0, group 5 at depth > 0)
-      const email = match[depth === 0 ? 9 : 5];
-      if (email) nodes.push(<a key={key} href={`mailto:${email}`} className={LINK_CLASSES}>{email}</a>);
-    }
+  if (lastIndex < text.length) nodes.push(text.slice(lastIndex));
+  return nodes;
+}
 
+function parseInline(text: string, keyOffset: number): ReactNode[] {
+  const re = new RegExp(INLINE_RE.source, "g");
+  const nodes: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = re.exec(text)) !== null) {
+    if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index));
+    const key = `${keyOffset}-${match.index}`;
+    if (match[1])      nodes.push(renderLink(key, match[3], match[2]));
+    else if (match[4]) nodes.push(renderLink(key, match[4], match[4]));
+    else if (match[5]) nodes.push(<strong key={key}>{parseLinksOnly(match[6], keyOffset * 100)}</strong>);
+    else if (match[7]) nodes.push(<em key={key}>{parseLinksOnly(match[8], keyOffset * 100)}</em>);
+    else if (match[9]) nodes.push(renderLink(key, `mailto:${match[9]}`, match[9]));
     lastIndex = match.index + match[0].length;
   }
 
