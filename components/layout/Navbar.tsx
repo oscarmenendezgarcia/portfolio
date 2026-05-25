@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { site } from '@/lib/site';
 
 // ─── Inline SVG icons ────────────────────────────────────────────────────────
@@ -79,6 +80,13 @@ function SocialIcon({ label }: { label: string }) {
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeHref, setActiveHref] = useState<string>('');
+  // Track client-side mount so createPortal is only called in the browser.
+  // The <header> has backdrop-filter which makes it a containing block for
+  // position:fixed children in Chrome/Safari, collapsing the menu to 0px height.
+  // Portalling to document.body ensures the menu is positioned vs. the viewport.
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   // ── Active section via IntersectionObserver ──────────────────────────────
   useEffect(() => {
@@ -236,7 +244,15 @@ export default function Navbar() {
       </nav>
 
       {/* ── Mobile menu panel ────────────────────────────────────────────── */}
-      {isMenuOpen && (
+      {/*
+        Rendered via createPortal into document.body so that position:fixed is
+        anchored to the viewport, not to the <header>. The header has
+        `backdrop-filter` which — in Chrome 88+ and Safari — establishes a
+        containing block for fixed-positioned descendants, collapsing the panel
+        to 0px height (top-16 === bottom-0 relative to a 64px header).
+        Portalling bypasses that constraint entirely.
+      */}
+      {mounted && isMenuOpen && createPortal(
         <div
           id="mobile-menu"
           role="dialog"
@@ -302,7 +318,8 @@ export default function Navbar() {
               ))}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
