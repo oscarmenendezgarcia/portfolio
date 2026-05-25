@@ -9,92 +9,85 @@ interface ChatMessageProps {
   isStreaming: boolean;
 }
 
-/**
- * Parses inline markdown within a single paragraph of text.
- * Supported: **bold**, *italic*, [text](url), bare https:// URLs.
- * During streaming, incomplete patterns (e.g. ** with no closing **) are
- * left as plain text because the regex simply won't match them.
- */
-function parseInline(text: string, keyOffset: number): ReactNode[] {
-  // Group layout:
-  //  1: full [text](url)   2: link label   3: link href
-  //  4: bare URL
-  //  5: full **bold**      6: bold text
-  //  7: full *italic*      8: italic text
+const LINK_CLASSES =
+  "text-accent underline underline-offset-2 hover:text-accent-hover break-all";
+
+// depth > 0 skips bold/italic to avoid infinite recursion inside em/strong
+function parseInline(text: string, keyOffset: number, depth = 0): ReactNode[] {
+  // Groups (depth === 0):
+  //  1-3: [label](href)   4: bare URL   5-6: **bold**   7-8: *italic*   9: email
+  // Groups (depth > 0):
+  //  1-3: [label](href)   4: bare URL   5: email
   const re =
-    /(\[([^\]]+)\]\((https?:\/\/[^)]+)\))|(https?:\/\/[^\s<>"]+)|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)/g;
+    depth === 0
+      ? /(\[([^\]]+)\]\((https?:\/\/[^)]+)\))|(https?:\/\/[^\s<>"]+)|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)|([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g
+      : /(\[([^\]]+)\]\((https?:\/\/[^)]+)\))|(https?:\/\/[^\s<>"]+)|([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
 
   const nodes: ReactNode[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
   while ((match = re.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      nodes.push(text.slice(lastIndex, match.index));
-    }
-
+    if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index));
     const key = `${keyOffset}-${match.index}`;
 
     if (match[1]) {
-      // [label](href)
-      nodes.push(
-        <a
-          key={key}
-          href={match[3]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-accent underline underline-offset-2 hover:text-accent-hover break-all"
-        >
-          {match[2]}
-        </a>
-      );
+      nodes.push(<a key={key} href={match[3]} target="_blank" rel="noopener noreferrer" className={LINK_CLASSES}>{match[2]}</a>);
     } else if (match[4]) {
-      // bare URL
-      nodes.push(
-        <a
-          key={key}
-          href={match[4]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-accent underline underline-offset-2 hover:text-accent-hover break-all"
-        >
-          {match[4]}
-        </a>
-      );
-    } else if (match[5]) {
-      // **bold**
-      nodes.push(<strong key={key}>{match[6]}</strong>);
-    } else if (match[7]) {
-      // *italic*
-      nodes.push(<em key={key}>{match[8]}</em>);
+      nodes.push(<a key={key} href={match[4]} target="_blank" rel="noopener noreferrer" className={LINK_CLASSES}>{match[4]}</a>);
+    } else if (depth === 0 && match[5]) {
+      // **bold** — recurse to catch links inside
+      nodes.push(<strong key={key}>{parseInline(match[6], keyOffset * 1000, 1)}</strong>);
+    } else if (depth === 0 && match[7]) {
+      // *italic* — recurse to catch links inside
+      nodes.push(<em key={key}>{parseInline(match[8], keyOffset * 1000, 1)}</em>);
+    } else {
+      // email (group 9 at depth 0, group 5 at depth > 0)
+      const email = match[depth === 0 ? 9 : 5];
+      if (email) nodes.push(<a key={key} href={`mailto:${email}`} className={LINK_CLASSES}>{email}</a>);
     }
 
     lastIndex = match.index + match[0].length;
   }
 
-  if (lastIndex < text.length) {
-    nodes.push(text.slice(lastIndex));
-  }
-
+  if (lastIndex < text.length) nodes.push(text.slice(lastIndex));
   return nodes;
 }
 
-/**
- * Splits text on double-newlines into paragraphs, runs inline parsing on
- * each, and appends the streaming caret to the last paragraph.
- */
 function parseMarkdown(text: string, caret: ReactNode): ReactNode[] {
-  const paragraphs = text.split(/\n\n/);
+  const blocks = text.split(/\n\n/);
+  const result: ReactNode[] = [];
 
-  return paragraphs.map((para, i) => {
-    const isLast = i === paragraphs.length - 1;
-    return (
-      <p key={i} className="mb-2 last:mb-0">
-        {parseInline(para, i)}
-        {isLast ? caret : null}
-      </p>
-    );
+  blocks.forEach((block, i) => {
+    const isLast = i === blocks.length - 1;
+    const lines = block.split("\n");
+    const listItems = lines.filter((l) => /^[-*] /.test(l));
+
+    if (listItems.length > 0 && listItems.length === lines.filter((l) => l.trim()).length) {
+      result.push(
+        <ul key={i} className="list-disc list-outside ml-4 space-y-0.5 mb-2 last:mb-0">
+          {listItems.map((line, j) => {
+            const isLastItem = isLast && j === listItems.length - 1;
+            return (
+              <li key={j}>
+                {parseInline(line.slice(2), i * 1000 + j)}
+                {isLastItem ? caret : null}
+              </li>
+            );
+          })}
+        </ul>
+      );
+    } else {
+      result.push(
+        <p key={i} className="mb-2 last:mb-0">
+          {parseInline(block, i)}
+          {isLast ? caret : null}
+        </p>
+      );
+    }
   });
+
+  return result;
 }
 
 /**
