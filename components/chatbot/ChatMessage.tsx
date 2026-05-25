@@ -35,7 +35,7 @@ export default function ChatMessage({
     >
       <div
         className={[
-          "rounded-md px-3 py-2 text-sm leading-relaxed",
+          "rounded-md px-3 py-2 text-sm leading-relaxed break-words",
           isUser
             ? "bg-[#2C2925] text-[#F7F5F0] max-w-[80%]"
             : "bg-surface-elevated text-text-primary max-w-[92%]",
