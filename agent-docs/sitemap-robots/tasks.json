@@ -1,0 +1,55 @@
+{
+  "version": "1.0",
+  "project": "portfolio",
+  "feature": "sitemap-robots",
+  "date": "2026-07-06",
+  "tasks": [
+    {
+      "id": "T-001",
+      "title": "Add app/sitemap.ts using Next.js MetadataRoute convention",
+      "description": "Create app/sitemap.ts with a default export typed as MetadataRoute.Sitemap. Import { site } from '@/lib/site' and return a single entry for the root URL (site.url) with lastModified, changeFrequency 'monthly', and priority 1. Read node_modules/next/dist/docs/ for the Next 16 sitemap convention and exact field names before writing. Do not modify lib/site.ts.",
+      "role": "Developer",
+      "priority": "High",
+      "estimate": "0.5 day",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "File app/sitemap.ts exists and default-exports a function typed with MetadataRoute.Sitemap.",
+        "Base URL comes from site.url (imported from @/lib/site), not a hardcoded string.",
+        "Sitemap contains exactly one URL entry (the root); no in-page anchor entries.",
+        "GET /sitemap.xml returns 200 with Content-Type application/xml and a <loc> equal to site.url.",
+        "next build succeeds and the route appears in the build output; typecheck passes."
+      ]
+    },
+    {
+      "id": "T-002",
+      "title": "Add app/robots.ts using Next.js MetadataRoute convention",
+      "description": "Create app/robots.ts with a default export typed as MetadataRoute.Robots. Import { site } from '@/lib/site' and return rules { userAgent '*', allow '/', disallow '/api/' } plus sitemap `${site.url}/sitemap.xml`. Read node_modules/next/dist/docs/ for the Next 16 robots convention before writing. Do not add a static public/robots.txt.",
+      "role": "Developer",
+      "priority": "High",
+      "estimate": "0.5 day",
+      "dependencies": ["T-001"],
+      "acceptance_criteria": [
+        "File app/robots.ts exists and default-exports a function typed with MetadataRoute.Robots.",
+        "GET /robots.txt returns 200 with Content-Type text/plain.",
+        "Output contains Allow: / and Disallow: /api/.",
+        "Output contains a Sitemap: line pointing to `${site.url}/sitemap.xml`, with the host matching site.url.",
+        "No public/robots.txt or public/sitemap.xml is added (no shadowing of generated routes).",
+        "next build and typecheck pass; no new dependency added to package.json."
+      ]
+    },
+    {
+      "id": "T-003",
+      "title": "Verify build-time env override and document deploy contract",
+      "description": "Confirm both artifacts honor NEXT_PUBLIC_SITE_URL at build time (matching the existing metadataBase behavior) and that the fallback https://portfolio.local appears only when the env var is unset. Add a short note to the changelog / deploy checklist that NEXT_PUBLIC_SITE_URL must be set in production.",
+      "role": "DevOps",
+      "priority": "Medium",
+      "estimate": "0.25 day",
+      "dependencies": ["T-001", "T-002"],
+      "acceptance_criteria": [
+        "Building with NEXT_PUBLIC_SITE_URL set produces sitemap/robots URLs using that domain.",
+        "Building without it produces https://portfolio.local (documented fallback), not a crash.",
+        "Changelog/deploy note states NEXT_PUBLIC_SITE_URL is required for correct production sitemap/robots."
+      ]
+    }
+  ]
+}
