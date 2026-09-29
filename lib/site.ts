@@ -117,6 +117,17 @@ export const projects: ProjectCard[] = [
     status: "in-progress",
     stack: ["Node.js", "SQLite", "React 19", "TypeScript", "Tailwind"],
   },
+  {
+    id: "03",
+    kind: "project",
+    title: "Monochrome TCG",
+    description:
+      "A 2D trading card game vs. an AI, rendered entirely in monochrome pixel art.",
+    role: "Author & maintainer",
+    href: "https://monochrome-liard.vercel.app",
+    status: "launched",
+    stack: ["TypeScript", "Vite", "Phaser 3", "Vercel"],
+  },
 ];
 
 // ─── Experience ───────────────────────────────────────────────────────────────
