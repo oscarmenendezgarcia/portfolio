@@ -122,7 +122,7 @@ export const projects: ProjectCard[] = [
     kind: "project",
     title: "Monochrome TCG",
     description:
-      "A 2D trading card game vs. an AI, rendered entirely in monochrome pixel art.",
+      "A 2D trading card game, rendered entirely in monochrome pixel art.",
     role: "Author & maintainer",
     href: "https://monochrome-liard.vercel.app",
     status: "launched",
